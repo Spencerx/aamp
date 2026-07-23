@@ -11,6 +11,8 @@ This repository contains the protocol definition and portable tooling around AAM
 - `aamp-openclaw-plugin`
 - `aamp-acp-bridge`
 - `aamp-cli-bridge`
+- `aamp-feishu-bridge`
+- `aamp-wechat-bridge`
 
 ## Before You Start
 
@@ -33,10 +35,14 @@ Before opening a pull request, run the checks relevant to the packages you chang
 
 ```bash
 cd packages/sdks/nodejs && npm install && npm run build && npm test
+cd packages/sdks/python && python -m unittest discover -s tests
+cd packages/sdks/go && go test ./...
 cd packages/aamp-cli && npm install && npm run build
 cd packages/aamp-openclaw-plugin && npm install && npm run build
 cd packages/aamp-acp-bridge && npm install && npm run build
 cd packages/aamp-cli-bridge && npm install && npm run build
+cd packages/aamp-feishu-bridge && npm install && npm run build
+cd packages/aamp-wechat-bridge && npm install && npm run build
 ```
 
 ## Security

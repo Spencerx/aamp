@@ -96,6 +96,6 @@ message = parse_aamp_headers(
 ## Run tests
 
 ```bash
-cd packages/sdk-python
+cd packages/sdks/python
 python -m unittest discover -s tests
 ```
