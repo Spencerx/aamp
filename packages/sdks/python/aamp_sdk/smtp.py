@@ -269,6 +269,7 @@ class SmtpSender:
         task_id: str | None = None,
         priority: str = "normal",
         expires_at: str | None = None,
+        session_key: str | None = None,
         dispatch_context: dict[str, str] | None = None,
         parent_task_id: str | None = None,
         attachments: list[Attachment] | None = None,
@@ -278,6 +279,7 @@ class SmtpSender:
             resolved_task_id,
             priority=priority,
             expires_at=expires_at,
+            session_key=session_key,
             dispatch_context=dispatch_context,
             parent_task_id=parent_task_id,
         )
