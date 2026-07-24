@@ -8,7 +8,7 @@ This SDK now includes the same core runtime shape as the Node.js SDK:
 - directory query and profile updates
 - realtime stream create / append / get / close
 - AAMP header builders and parsers
-- SMTP sending for `task.dispatch`, `task.result`, `task.cancel`, `task.help_needed`, `task.stream.opened`, and `card.*`
+- SMTP sending for `task.dispatch`, `task.result`, `task.cancel`, `task.help_needed`, `task.stream.opened`, `pair.request`, `pair.respond`, and `card.*`
 - JMAP WebSocket push reception with polling fallback
 - attachment blob download
 - recent mailbox reconciliation as a safety net
@@ -50,6 +50,17 @@ func main() {
       Status:    "completed",
       Output:    "done",
       InReplyTo: task.MessageID,
+    }); err != nil {
+      log.Fatal(err)
+    }
+  })
+  client.On("pair.request", func(payload any) {
+    req := payload.(aamp.ParsedMessage)
+    if err := client.SendPairRespond(aamp.SendPairRespondOptions{
+      To:        req.From,
+      TaskID:    req.TaskID,
+      Success:   true,
+      InReplyTo: req.MessageID,
     }); err != nil {
       log.Fatal(err)
     }
@@ -117,9 +128,24 @@ message, err := aamp.ParseAampHeaders(aamp.EmailMetadata{
 })
 ```
 
+## Send a pairing request
+
+```go
+taskID, messageID, err := client.SendPairRequest(aamp.SendPairRequestOptions{
+  To:       "agent@example.com",
+  PairCode: "abc123",
+  DispatchContextRules: map[string][]string{
+    "source": {"feishu"},
+  },
+})
+_ = taskID
+_ = messageID
+_ = err
+```
+
 ## Run tests
 
 ```bash
-cd packages/sdk-go
+cd packages/sdks/go
 go test ./...
 ```

@@ -151,6 +151,21 @@ type SendCardResponseOptions struct {
 	InReplyTo string
 }
 
+type SendPairRequestOptions struct {
+	To                   string
+	TaskID               string
+	PairCode             string
+	DispatchContextRules map[string][]string
+}
+
+type SendPairRespondOptions struct {
+	To        string
+	TaskID    string
+	Success   bool
+	Reason    string
+	InReplyTo string
+}
+
 type CreateStreamOptions struct {
 	TaskID    string `json:"taskId"`
 	PeerEmail string `json:"peerEmail"`
@@ -227,32 +242,35 @@ type EmailMetadata struct {
 }
 
 type ParsedMessage struct {
-	ProtocolVersion  string
-	Intent           string
-	TaskID           string
-	Title            string
-	Priority         string
-	ExpiresAt        string
-	SessionKey       string
-	DispatchContext  map[string]string
-	ParentTaskID     string
-	From             string
-	To               string
-	MessageID        string
-	Subject          string
-	BodyText         string
-	InReplyTo        string
-	References       []string
-	Status           string
-	Output           string
-	ErrorMsg         string
-	StructuredResult any
-	Question         string
-	BlockedReason    string
-	SuggestedOptions []string
-	StreamID         string
-	Summary          string
-	Attachments      []ReceivedAttachment
+	ProtocolVersion      string
+	Intent               string
+	TaskID               string
+	Title                string
+	Priority             string
+	ExpiresAt            string
+	SessionKey           string
+	DispatchContext      map[string]string
+	DispatchContextRules map[string][]string
+	ParentTaskID         string
+	From                 string
+	To                   string
+	MessageID            string
+	Subject              string
+	BodyText             string
+	InReplyTo            string
+	References           []string
+	Status               string
+	Success              bool
+	Output               string
+	ErrorMsg             string
+	StructuredResult     any
+	Question             string
+	BlockedReason        string
+	SuggestedOptions     []string
+	StreamID             string
+	Summary              string
+	PairCode             string
+	Attachments          []ReceivedAttachment
 }
 
 type ReceivedAttachment struct {

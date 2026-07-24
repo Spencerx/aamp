@@ -268,6 +268,14 @@ func (c *Client) SendCardResponse(opts SendCardResponseOptions) error {
 	return c.SmtpSender.SendCardResponse(opts)
 }
 
+func (c *Client) SendPairRequest(opts SendPairRequestOptions) (string, string, error) {
+	return c.SmtpSender.SendPairRequest(opts)
+}
+
+func (c *Client) SendPairRespond(opts SendPairRespondOptions) error {
+	return c.SmtpSender.SendPairRespond(opts)
+}
+
 func (c *Client) DownloadBlob(blobID, filename string) ([]byte, error) {
 	return c.JmapClient.DownloadBlob(blobID, filename)
 }
