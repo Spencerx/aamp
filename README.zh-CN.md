@@ -576,6 +576,7 @@ packages/
   aamp-acp-bridge/
   aamp-cli-bridge/
   aamp-feishu-bridge/
+  aamp-wechat-bridge/
 ```
 
 仓库中的示例可能会使用 `meshmail.ai` 作为兼容的 AAMP Host。

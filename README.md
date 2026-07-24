@@ -593,6 +593,7 @@ packages/
   aamp-acp-bridge/
   aamp-cli-bridge/
   aamp-feishu-bridge/
+  aamp-wechat-bridge/
 ```
 
 Examples in this repo may reference `meshmail.ai` as a compatible AAMP host.
