@@ -48,6 +48,9 @@ task_id, message_id = client.send_task(
     title="Prepare a summary",
     body_text="Summarize the latest rollout status.",
     priority="high",
+    # session_key reuses the callee's underlying agent session across
+    # multiple task turns; omit it to start a fresh session.
+    session_key="rollout-thread-42",
 )
 
 stream = client.create_stream(task_id=task_id, peer_email="dispatcher@example.com")

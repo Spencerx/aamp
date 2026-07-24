@@ -27,6 +27,43 @@ class ProtocolTests(unittest.TestCase):
         self.assertEqual(headers["X-AAMP-Intent"], "task.dispatch")
         self.assertEqual(headers["X-AAMP-TaskId"], "task-1")
 
+    def test_dispatch_session_key_round_trip(self) -> None:
+        headers = build_dispatch_headers("task-1", session_key="sess-1")
+        self.assertEqual(headers["X-AAMP-Session-Key"], "sess-1")
+        parsed = parse_aamp_headers(
+            {
+                "from": "dispatcher@example.com",
+                "to": "agent@example.com",
+                "subject": "[AAMP Task] Do something",
+                "messageId": "<msg-1@example.com>",
+                "bodyText": "Please do the work.",
+                "headers": headers,
+            }
+        )
+        self.assertIsNotNone(parsed)
+        assert parsed is not None
+        self.assertEqual(parsed["intent"], "task.dispatch")
+        self.assertEqual(parsed["sessionKey"], "sess-1")
+
+    def test_dispatch_session_key_empty(self) -> None:
+        headers = build_dispatch_headers("task-1", session_key="")
+        self.assertNotIn("X-AAMP-Session-Key", headers)
+        parsed = parse_aamp_headers(
+            {
+                "from": "dispatcher@example.com",
+                "to": "agent@example.com",
+                "subject": "[AAMP Task] Do something",
+                "headers": headers,
+            }
+        )
+        self.assertIsNotNone(parsed)
+        assert parsed is not None
+        self.assertIsNone(parsed["sessionKey"])
+
+    def test_dispatch_session_key_trimmed(self) -> None:
+        headers = build_dispatch_headers("task-1", session_key="  sess-trim  ")
+        self.assertEqual(headers["X-AAMP-Session-Key"], "sess-trim")
+
     def test_parse_task_result(self) -> None:
         headers = build_result_headers(
             "task-2",
