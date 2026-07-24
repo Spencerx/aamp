@@ -8,7 +8,7 @@ This SDK now includes the same core runtime shape as the Node.js SDK:
 - directory query and profile updates
 - realtime stream create / append / get / close
 - AAMP header builders and parsers
-- SMTP sending for `task.dispatch`, `task.result`, `task.cancel`, `task.help_needed`, `task.stream.opened`, and `card.*`
+- SMTP sending for `task.dispatch`, `task.result`, `task.cancel`, `task.help_needed`, `task.stream.opened`, `pair.request`, `pair.respond`, and `card.*`
 - JMAP WebSocket push reception with polling fallback
 - attachment blob download
 - recent mailbox reconciliation as a safety net
@@ -71,6 +71,23 @@ client.send_result(
     task_id=task_id,
     status="completed",
     output="done",
+    in_reply_to=message_id,
+)
+```
+
+## Pairing
+
+```python
+task_id, message_id = client.send_pair_request(
+    to="agent@example.com",
+    pair_code="abc123",
+    dispatch_context_rules={"source": ["wechat"]},
+)
+
+client.send_pair_respond(
+    to="bridge@example.com",
+    task_id=task_id,
+    success=True,
     in_reply_to=message_id,
 )
 ```
