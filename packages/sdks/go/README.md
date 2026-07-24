@@ -120,6 +120,6 @@ message, err := aamp.ParseAampHeaders(aamp.EmailMetadata{
 ## Run tests
 
 ```bash
-cd packages/sdk-go
+cd packages/sdks/go
 go test ./...
 ```
