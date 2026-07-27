@@ -13,6 +13,10 @@ This SDK now includes the same core runtime shape as the Node.js SDK:
 - attachment blob download
 - recent mailbox reconciliation as a safety net
 
+See the repository-wide [SDK capability matrix](../../../docs/SDK_CAPABILITY_MATRIX.md)
+and [shared conformance fixtures](../../../conformance/README.md) for parity
+across Node.js, Python, and Go.
+
 ## Install
 
 ```bash
