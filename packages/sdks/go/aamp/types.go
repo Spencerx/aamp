@@ -3,24 +3,26 @@ package aamp
 import "time"
 
 type Config struct {
-	Email              string
-	MailboxToken       string
-	BaseURL            string
-	HTTPSendBaseURL    string
-	SMTPHost           string
-	SMTPPort           int
-	SMTPPassword       string
-	ReconnectInterval  time.Duration
-	RejectUnauthorized bool
+	Email                        string
+	MailboxToken                 string
+	BaseURL                      string
+	HTTPSendBaseURL              string
+	SMTPHost                     string
+	SMTPPort                     int
+	SMTPPassword                 string
+	ReconnectInterval            time.Duration
+	RejectUnauthorized           bool
+	StreamAppendSequenceTimeout  time.Duration
 }
 
 type MailboxIdentityConfig struct {
-	Email              string
-	SMTPPassword       string
-	BaseURL            string
-	SMTPPort           int
-	ReconnectInterval  time.Duration
-	RejectUnauthorized bool
+	Email                       string
+	SMTPPassword                string
+	BaseURL                     string
+	SMTPPort                    int
+	ReconnectInterval           time.Duration
+	RejectUnauthorized          bool
+	StreamAppendSequenceTimeout time.Duration
 }
 
 type RegisterMailboxOptions struct {
@@ -196,6 +198,13 @@ type AppendStreamEventOptions struct {
 	StreamID string         `json:"streamId"`
 	Type     string         `json:"type"`
 	Payload  map[string]any `json:"payload"`
+	// Sequence is a client-side ordering hint for concurrent appends.
+	// When set, appends are dispatched strictly by sequence order.
+	// Concurrent callers must pass unique contiguous sequences.
+	// Duplicate or already-dispatched sequences return an error.
+	// Missing sequences fail pending waiters after StreamAppendSequenceTimeout.
+	// When nil, the SDK assigns a monotonic sequence at enqueue time.
+	Sequence *int `json:"-"`
 }
 
 type CloseStreamOptions struct {

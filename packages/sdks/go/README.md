@@ -103,6 +103,19 @@ func main() {
     log.Fatal(err)
   }
 
+  // Concurrent text.delta appends must pass unique contiguous Sequence values.
+  for index, token := range []string{"A", "B", "C"} {
+    seq := index
+    if _, err := client.AppendStreamEvent(aamp.AppendStreamEventOptions{
+      StreamID: stream.StreamID,
+      Type:     "text.delta",
+      Payload:  map[string]any{"text": token},
+      Sequence: &seq,
+    }); err != nil {
+      log.Fatal(err)
+    }
+  }
+
   if err := client.SendResult(aamp.SendResultOptions{
     To:        "dispatcher@example.com",
     TaskID:    taskID,
@@ -145,6 +158,25 @@ taskID, messageID, err := client.SendPairRequest(aamp.SendPairRequestOptions{
 _ = taskID
 _ = messageID
 _ = err
+```
+
+## Stream append sequencing
+
+`AppendStreamEventOptions.Sequence` controls dispatch order for a stream:
+
+- **Single-threaded / externally serialized callers** may omit `Sequence`. The SDK auto-assigns a monotonic value at enqueue time.
+- **Concurrent callers** on the same stream must pass unique, contiguous sequences (`0, 1, 2, ...`). Dispatch follows sequence order, not lock-acquisition order.
+- Duplicate or already-dispatched sequences return an error.
+- If a required sequence never arrives, pending appends fail after `StreamAppendSequenceTimeout` (default 30s) instead of hanging forever.
+
+```go
+seq := 0
+_, err := client.AppendStreamEvent(aamp.AppendStreamEventOptions{
+  StreamID: streamID,
+  Type:     "text.delta",
+  Payload:  map[string]any{"text": "A"},
+  Sequence: &seq,
+})
 ```
 
 ## Run tests
