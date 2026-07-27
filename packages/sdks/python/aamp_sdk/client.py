@@ -274,6 +274,12 @@ class AampClient(TinyEmitter):
     def send_card_response(self, **kwargs: Any) -> None:
         self.smtp_sender.send_card_response(**kwargs)
 
+    def send_pair_request(self, **kwargs: Any) -> tuple[str, str]:
+        return self.smtp_sender.send_pair_request(**kwargs)
+
+    def send_pair_respond(self, **kwargs: Any) -> None:
+        self.smtp_sender.send_pair_respond(**kwargs)
+
     def download_blob(self, blob_id: str, filename: str | None = None) -> bytes:
         return self.jmap_client.download_blob(blob_id, filename)
 
