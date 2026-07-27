@@ -27,6 +27,9 @@ For small fixes, documentation improvements, or test additions, feel free to sen
 - Do not add private endpoints, credentials, or deployment details.
 - Default examples and config snippets to secure settings.
 - Add or update tests when changing parser, transport, or message-shape behavior.
+- Update the [SDK capability matrix](./docs/SDK_CAPABILITY_MATRIX.md) when a
+  public SDK capability changes, and update the shared
+  [parser fixtures](./conformance/fixtures/parser.json) when wire parsing changes.
 - Keep README examples runnable and consistent with published package behavior.
 
 ## Local Checks
