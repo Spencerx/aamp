@@ -66,6 +66,16 @@ client.append_stream_event(
     payload={"stage": "running"},
 )
 
+# Concurrent text.delta appends must pass unique contiguous sequences.
+# Omitting sequence keeps auto-assigned enqueue order (single-threaded use).
+for index, token in enumerate(["A", "B", "C"]):
+    client.append_stream_event(
+        stream_id=stream["streamId"],
+        event_type="text.delta",
+        payload={"text": token},
+        sequence=index,
+    )
+
 client.send_result(
     to="dispatcher@example.com",
     task_id=task_id,
@@ -93,6 +103,25 @@ message = parse_aamp_headers(
             "X-AAMP-Priority": "high",
         },
     }
+)
+```
+
+## Stream append sequencing
+
+`append_stream_event(..., sequence=...)` controls dispatch order for a stream:
+
+- **Single-threaded / externally serialized callers** may omit `sequence`. The SDK auto-assigns a monotonic value at enqueue time.
+- **Concurrent callers** on the same stream must pass unique, contiguous sequences (`0, 1, 2, ...`). Dispatch follows sequence order, not lock-acquisition order.
+- Duplicate or already-dispatched sequences raise `ValueError`.
+- If a required sequence never arrives, pending appends fail with `TimeoutError` after `stream_append_sequence_timeout` (default 30s) instead of hanging forever.
+
+```python
+# Concurrent producers: each thread/goroutine owns a sequence.
+client.append_stream_event(
+    stream_id=stream_id,
+    event_type="text.delta",
+    payload={"text": "A"},
+    sequence=0,
 )
 ```
 
